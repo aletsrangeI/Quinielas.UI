@@ -1,15 +1,14 @@
-import { quinielasApi } from "../../api/Quinielas.WebService";
 import { login } from "./authSlice";
+import { QuinielaAuth } from "../apis/QuinielaAuth";
 
 export const authenticate = (email, password) => {
-    return async (dispatch) => {
+    async ({ UserName, Password }, { rejectWithValue }) => {
         try {
-            const { data } = await quinielasApi.post('api/Users/Authenticate', { email, password });
-            dispatch(login(data));
+          const { data } = await useAuthenticateMutation({ UserName, Password }).unwrap();
+          return data; // Devuelve los datos si la autenticación es exitosa
+        } catch (error) {
+          // Si hay un error, lo manejas y lo devuelves con rejectWithValue para que Redux lo maneje como un rechazo
+          return rejectWithValue(error.message);
         }
-        catch (error) {
-            console.log(error);
-            dispatch(logout({ errorMessage: error.response.data.message }));
-        }
-    };
+    }
 }
