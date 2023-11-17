@@ -1,11 +1,13 @@
 import React, { useMemo, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import {Link as RouterLink} from 'react-router-dom';
 import { Button, Container, Form } from "react-bootstrap";
 import { useForm } from "../../hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { authenticate } from "../../store/auth/thunks";
 import { useAuthenticateMutation } from "../../store/apis/QuinielaAuth";
 import { login } from "../../store/auth";
+import { Link } from "react-router-dom";
 
 const formData = {
   UserName: "",
@@ -62,10 +64,11 @@ const Login = () => {
           <Form.Label className="text-light">Contraseña</Form.Label>
           <Form.Control value={Password} name="Password" onChange={onInputChange} type="Password" placeholder="Contraseña" />
         </Form.Group>
-
+        
         <Button disabled={isAuthenticating} variant="primary" type="submit">
           Ingresar
         </Button>
+        <Link component={RouterLink} to="/auth/register" className="btn btn-link">Registrarse</Link>
       </Form>
     </Container>
   );

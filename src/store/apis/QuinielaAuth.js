@@ -7,7 +7,7 @@ import {
   export const QuinielaAuth = createApi({
     reducerPath: "api/Users",
     baseQuery: fetchBaseQuery({
-      baseUrl: "http://localhost:5248/",
+      baseUrl: 'http://localhost:5248/',
     }),
   
     endpoints: (builder) => ({
