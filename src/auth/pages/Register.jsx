@@ -3,9 +3,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Col, Container, Form, NavLink, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "../../hooks";
+import { login } from "../../store/auth";
+import { useRegisterMutation } from "../../store/apis/QuinielaAuth";
 
 const formData = {
-  Name: "",
+  FirstName: "",
   LastName: "",
   UserName: "",
   Password: "",
@@ -13,7 +15,7 @@ const formData = {
 };
 
 const formValidations = {
-  Name: [
+  FirstName: [
     (value) => value.length >= 3,
     "El nombre debe tener al menos 3 caracteres",
   ],
@@ -34,14 +36,14 @@ const formValidations = {
 const Register = () => {
   const dispatch = useDispatch();
   const {
-    Name,
+    FirstName,
     LastName,
     UserName,
     Password,
     ConfirmPassword,
     onInputChange,
     isFormValid,
-    NameValid,
+    FirstNameValid,
     LastNameValid,
     UserNameValid,
     PasswordValid,
@@ -54,25 +56,39 @@ const Register = () => {
 
   const isCheckingAuthentication = useMemo(() => status === "checking", [status]);
 
-  const onSubmit = (event) => {
+  const [createUser, { isLoading, isError }] = useRegisterMutation();
+
+
+  const onSubmit = async (event) => {
     event.preventDefault();
       setformSubmitted(true);
-      console.log(Name, LastName, UserName, Password, ConfirmPassword)
       if (!isFormValid) return;
-      console.log("onSubmit");
+      try {
+        const { data } = await createUser({ FirstName, LastName, UserName, Password }).unwrap();
+        // Successfully authenticated, 'data' contains the response
+        console.log('Authentication successful:', data);
+        // Dispatch an action or perform necessary actions with 'data'
+        dispatch(login(data)); // For example, dispatch a login action
+  
+        // Continue with further logic if needed, e.g., redirect to another page
+      } catch (error) {
+        // Authentication failed, handle error
+        console.error('Authentication error:', error);
+        // Dispatch an action or handle error state accordingly
+      }
   };
 
   return (
     <Container className="bg-dark d-flex flex-column min-vh-100 justify-content-center align-items-center">
       <Form onSubmit={onSubmit}>
         <Row className="mb-3">
-          <Form.Group as={Col} className="mb-3" controlId="Name">
+          <Form.Group as={Col} className="mb-3" controlId="FirstName">
             <Form.Label className="text-light">Nombres</Form.Label>
             <Form.Control
               onChange={onInputChange}
-              value={Name}
-              name="Name"
-              type="Name"
+              value={FirstName}
+              name="FirstName"
+              type="FirstName"
               placeholder=""
             />
             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>

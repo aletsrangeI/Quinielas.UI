@@ -28,7 +28,7 @@ const Login = () => {
   const [formSubmitted, setformSubmitted] = useState(false);
   const { status, errorMessage } = useSelector(state => state.auth);
   const isAuthenticating = useMemo(() => status === 'checking', [status]);
-  const [createUser, { isLoading, isError }] = useAuthenticateMutation();
+  const [loginUser, { isLoading, isError }] = useAuthenticateMutation();
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -36,7 +36,7 @@ const Login = () => {
     if (!isFormValid) return;
 
     try {
-      const { data } = await createUser({ UserName, Password }).unwrap();
+      const { data } = await loginUser({ UserName, Password }).unwrap();
       // Successfully authenticated, 'data' contains the response
       console.log('Authentication successful:', data);
       // Dispatch an action or perform necessary actions with 'data'
